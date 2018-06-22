@@ -1,3 +1,4 @@
+//一个不错的文档http://wentao1213.com/2016/11/25/linux-v4l2-usb/
 #include <stdio.h>  
 #include <stdlib.h>  
 #include <string.h>  
@@ -35,7 +36,7 @@ static int read_frame (void)
      /*帧出列*/  
      buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
      buf.memory = V4L2_MEMORY_MMAP;  
-     ioctl (fd, VIDIOC_DQBUF, &buf);  
+     ioctl (fd, VIDIOC_DQBUF, &buf);  //从驱动程序的输出缓冲区序列取出已填充（捕获）或显示（输出）缓冲区。
   
      write(file_fd,buffers[buf.index].start,buffers[buf.index].length);  
        
@@ -49,8 +50,8 @@ int main (int argc,char ** argv)
 {  
      struct v4l2_capability cap;  
      struct v4l2_format fmt;  
-     struct v4l2_requestbuffers req;  
-     struct v4l2_buffer buf;   
+     struct v4l2_requestbuffers req;  //在申请之前设置，用于存放申请信息，在申请时使用
+     struct v4l2_buffer buf;          //在申请之后使用，用于存放查询得到的缓冲区信息
      unsigned int i;  
      enum v4l2_buf_type type;  
 
@@ -82,9 +83,9 @@ int main (int argc,char ** argv)
      req.count               = 4;  
      req.type                = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
      req.memory              = V4L2_MEMORY_MMAP;  
-     ioctl (fd, VIDIOC_REQBUFS, &req);  
+     ioctl (fd, VIDIOC_REQBUFS, &req);  //在此步申请缓存区，用于存放图像，申请信息存放在req中
      
-     buffers = calloc (req.count, sizeof (*buffers));  
+     buffers = calloc (req.count, sizeof (*buffers));  //此处申请的缓存区是用于存放缓存区信息，而不是用于存放图像
       
     
      for (n_buffers = 0; n_buffers < req.count; ++n_buffers)  
@@ -94,7 +95,7 @@ int main (int argc,char ** argv)
            buf.memory      = V4L2_MEMORY_MMAP;  
            buf.index       = n_buffers;  
    
-           ioctl (fd, VIDIOC_QUERYBUF, &buf);   
+           ioctl (fd, VIDIOC_QUERYBUF, &buf);   //查询缓存区的相关信息
                
            buffers[n_buffers].length = buf.length;   
              
@@ -114,13 +115,13 @@ int main (int argc,char ** argv)
              buf.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
              buf.memory      = V4L2_MEMORY_MMAP;  
              buf.index       = i;   
-             ioctl (fd, VIDIOC_QBUF, &buf);  
+             ioctl (fd, VIDIOC_QBUF, &buf);  //將空（待捕获）或填充（待输出）缓冲区排入驱动的传入序列
                
      }  
       
     //开始捕捉图像数据    
     type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
-    ioctl (fd, VIDIOC_STREAMON, &type);  
+    ioctl (fd, VIDIOC_STREAMON, &type);  //VIDIOC_STREAMON和VIDIOC_STREAMOFF在流式传输（内存映射或用户指针）I/O期间启动和停止捕获或输出进程
 
     fd_set fds;  
   

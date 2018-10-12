@@ -55,7 +55,7 @@ int main (int argc,char ** argv)
      unsigned int i;  
      enum v4l2_buf_type type;  
 
-     file_fd = open("test.jpg", O_RDWR | O_CREAT, 0777); //用来保存图片  
+     file_fd = open("test.yuv", O_RDWR | O_CREAT, 0777); //用来保存图片  
       
      fd = open (dev_name, O_RDWR | O_NONBLOCK);  
 

@@ -2,8 +2,8 @@
 
 static void open_device( void ){
 	struct stat st;
-	if(-1 == stat(dev_name, &st)){   
-		fprintf(stderr, "Cannot identify '%s': %d, %s\n" , dev_name, errno,   
+	if(-1 == stat(dev_name, &st)){
+		fprintf(stderr, "Cannot identify '%s': %d, %s\n" , dev_name, errno,
 				strerror(errno));   
 		exit(EXIT_FAILURE);   
 	}   
